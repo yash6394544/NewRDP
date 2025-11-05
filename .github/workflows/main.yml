@@ -5,13 +5,14 @@ on:
 
   workflow_dispatch:
 
+
 jobs:
 
-secure-rdp:
+  secure-rdp:
 
-runs-on: windows-latest
+    runs-on: windows-latest
 
-timeout-minutes: 3600
+    timeout-minutes: 3600
 
 
     steps:
@@ -22,15 +23,15 @@ timeout-minutes: 3600
 
           # Enable Remote Desktop and disable Network Level Authentication (if needed)
 
-          Set-ItemProperty -Path 'HKLM:\System\CurrentControlSet\Control\Terminal Server' 
+          Set-ItemProperty -Path 'HKLM:\System\CurrentControlSet\Control\Terminal Server' `
 
                              -Name "fDenyTSConnections" -Value 0 -Force
 
-          Set-ItemProperty -Path 'HKLM:\System\CurrentControlSet\Control\Terminal Server\WinStations\RDP-Tcp' 
+          Set-ItemProperty -Path 'HKLM:\System\CurrentControlSet\Control\Terminal Server\WinStations\RDP-Tcp' `
 
                              -Name "UserAuthentication" -Value 0 -Force
 
-          Set-ItemProperty -Path 'HKLM:\System\CurrentControlSet\Control\Terminal Server\WinStations\RDP-Tcp' 
+          Set-ItemProperty -Path 'HKLM:\System\CurrentControlSet\Control\Terminal Server\WinStations\RDP-Tcp' `
 
                              -Name "SecurityLayer" -Value 0 -Force
 
@@ -43,7 +44,7 @@ timeout-minutes: 3600
 
           # For testing, allow any incoming connection on port 3389
 
-          netsh advfirewall firewall add rule name="RDP-Tailscale" 
+          netsh advfirewall firewall add rule name="RDP-Tailscale" `
 
             dir=in action=allow protocol=TCP localport=3389
 
@@ -120,7 +121,7 @@ timeout-minutes: 3600
 
           Invoke-WebRequest -Uri $tsUrl -OutFile $installerPath
 
-          Start-Process msiexec.exe -ArgumentList "/i", ""$installerPath"", "/quiet", "/norestart" -Wait
+          Start-Process msiexec.exe -ArgumentList "/i", "`"$installerPath`"", "/quiet", "/norestart" -Wait
 
           Remove-Item $installerPath -Force
 
@@ -164,13 +165,16 @@ timeout-minutes: 3600
           echo "TAILSCALE_IP=$tsIP" >> $env:GITHUB_ENV
 
      
-     - name: Verify RDP Accessibility
+
+      - name: Verify RDP Accessibility
 
         run: |
 
           Write-Host "Tailscale IP: $env:TAILSCALE_IP"
 
-# Test connectivity using Test-NetConnection against the Tailscale IP on port 3389
+         
+
+          # Test connectivity using Test-NetConnection against the Tailscale IP on port 3389
 
           $testResult = Test-NetConnection -ComputerName $env:TAILSCALE_IP -Port 3389
 
@@ -189,7 +193,7 @@ timeout-minutes: 3600
 
         run: |
 
-          Write-Host "n=== RDP ACCESS ==="
+          Write-Host "`n=== RDP ACCESS ==="
 
           Write-Host "Address: $env:TAILSCALE_IP"
 
@@ -197,7 +201,7 @@ timeout-minutes: 3600
 
           Write-Host "Password: $(echo $env:RDP_CREDS)"
 
-          Write-Host "==================n"
+          Write-Host "==================`n"
 
          
 
@@ -210,3 +214,4 @@ timeout-minutes: 3600
               Start-Sleep -Seconds 300
 
           }
+
