@@ -165,8 +165,7 @@ jobs:
           echo "TAILSCALE_IP=$tsIP" >> $env:GITHUB_ENV
 
      
-
-      - name: Verify RDP Accessibility
+     - name: Verify RDP Accessibility
 
         run: |
 
