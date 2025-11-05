@@ -5,11 +5,11 @@ on:
 
   workflow_dispatch:
 
-
 jobs:
 
-  secure-rdp:
-  runs-on: windows-latest
+secure-rdp:
+
+runs-on: windows-latest
 
     timeout-minutes: 3600
 
